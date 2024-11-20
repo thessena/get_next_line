@@ -6,7 +6,7 @@
 /*   By: thessena <thessena@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/14 17:25:59 by thessena          #+#    #+#             */
-/*   Updated: 2024/11/20 15:18:19 by thessena         ###   ########.fr       */
+/*   Updated: 2024/11/20 15:47:04 by thessena         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,7 @@ char	*extract_line(char **remainder)
 
 	if (!remainder || !*remainder || **remainder == '\0')
 	{
-		if (remainder && *remainder)
-			free(*remainder);
+		free(*remainder);
 		*remainder = NULL;
 		return (NULL);
 	}
@@ -30,7 +29,7 @@ char	*extract_line(char **remainder)
 	while ((*remainder)[line_len] && (*remainder)[line_len] != '\n')
 		line_len++;
 	extra_char = ((*remainder)[line_len] == '\n');
-	line = (char *)malloc((line_len + 1 + extra_char) * sizeof(char));
+	line = (char *)malloc((line_len + 1 + extra_char));
 	if (!line)
 		return (NULL);
 	ft_memcpy(line, *remainder, line_len + extra_char);
@@ -41,6 +40,25 @@ char	*extract_line(char **remainder)
 	return (line);
 }
 
+int	read_buffer(int fd, char **remainder, char *buffer)
+{
+	int	bytes_read;
+
+	bytes_read = read(fd, buffer, BUFFER_SIZE);
+	if (bytes_read < 0)
+	{
+		free(*remainder);
+		*remainder = NULL;
+		return (-1);
+	}
+	if (bytes_read > 0)
+		buffer[bytes_read] = '\0';
+	if (!*remainder)
+		*remainder = ft_strdup("");
+	*remainder = ft_strjoin(*remainder, buffer);
+	return (bytes_read);
+}
+
 char	*get_next_line(int fd)
 {
 	static char	*remainder;
@@ -49,34 +67,15 @@ char	*get_next_line(int fd)
 	int			bytes_read;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
-	{
-		if (remainder)
-		{
-			free(remainder);
-			remainder = NULL;
-		}
 		return (NULL);
-	}
 	buffer = (char *)malloc((BUFFER_SIZE + 1) * sizeof(char));
 	if (!buffer)
 		return (NULL);
 	bytes_read = 1;
 	while (bytes_read > 0)
 	{
-		bytes_read = read(fd, buffer, BUFFER_SIZE);
-		if (bytes_read < 0)
-		{
-			free(buffer);
-			free(remainder);
-			remainder = NULL;
-			return (NULL);
-		}
-		if (bytes_read > 0)
-			buffer[bytes_read] = '\0';
-		if (!remainder)
-			remainder = ft_strdup("");
-		remainder = ft_strjoin(remainder, buffer);
-		if (!remainder)
+		bytes_read = read_buffer(fd, &remainder, buffer);
+		if (bytes_read == -1)
 		{
 			free(buffer);
 			return (NULL);

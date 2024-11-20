@@ -6,7 +6,7 @@
 /*   By: thessena <thessena@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/14 17:24:00 by thessena          #+#    #+#             */
-/*   Updated: 2024/11/20 15:07:49 by thessena         ###   ########.fr       */
+/*   Updated: 2024/11/20 15:33:29 by thessena         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,9 @@ size_t	ft_strlen(const char *s)
 	size_t	len;
 
 	len = 0;
-	while (s[len])
+	if (!s)
+		return (0);
+	while (s && s[len])
 		len++;
 	return (len);
 }
