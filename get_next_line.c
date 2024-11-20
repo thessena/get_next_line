@@ -6,7 +6,7 @@
 /*   By: thessena <thessena@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/14 17:25:59 by thessena          #+#    #+#             */
-/*   Updated: 2024/11/20 15:47:04 by thessena         ###   ########.fr       */
+/*   Updated: 2024/11/20 16:23:05 by thessena         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,8 @@ char	*extract_line(char **remainder)
 
 int	read_buffer(int fd, char **remainder, char *buffer)
 {
-	int	bytes_read;
+	int		bytes_read;
+	char	*temp;
 
 	bytes_read = read(fd, buffer, BUFFER_SIZE);
 	if (bytes_read < 0)
@@ -55,7 +56,9 @@ int	read_buffer(int fd, char **remainder, char *buffer)
 		buffer[bytes_read] = '\0';
 	if (!*remainder)
 		*remainder = ft_strdup("");
-	*remainder = ft_strjoin(*remainder, buffer);
+	temp = ft_strjoin(*remainder, buffer);
+	free(*remainder);
+	*remainder = temp;
 	return (bytes_read);
 }
 
