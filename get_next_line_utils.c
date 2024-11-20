@@ -6,7 +6,7 @@
 /*   By: thessena <thessena@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/14 17:24:00 by thessena          #+#    #+#             */
-/*   Updated: 2024/11/20 11:08:22 by thessena         ###   ########.fr       */
+/*   Updated: 2024/11/20 11:14:40 by thessena         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,4 +81,19 @@ char	*ft_strjoin(char const *s1, char const *s2)
 		new_str[i++] = s2[j++];
 	new_str[i] = '\0';
 	return (new_str);
+}
+
+void	*ft_memcpy(void *dst, const void *src, size_t n)
+{
+	size_t	i;
+
+	if (!dst || !src)
+		return (NULL);
+	i = 0;
+	while (i < n)
+	{
+		((char *)dst)[i] = ((char *)src)[i];
+		i++;
+	}
+	return (dst);
 }
