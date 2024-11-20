@@ -6,7 +6,7 @@
 /*   By: thessena <thessena@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/14 17:25:59 by thessena          #+#    #+#             */
-/*   Updated: 2024/11/20 10:00:59 by thessena         ###   ########.fr       */
+/*   Updated: 2024/11/20 10:48:21 by thessena         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,17 +21,24 @@ char	*get_next_line(int fd)
 	
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	
 	buffer = (char *)malloc((BUFFER_SIZE + 1) * sizeof(char));
 	if (!buffer)
 		return (NULL);
-
+	if (remainder && ft_strchr(remainder, '\n'))
+		return (extract_line(&remainder));
 	while ((bytes_read = read(fd, buffer, BUFFER_SIZE)) > 0)
 	{
 		buffer[bytes_read] = '\0';
+		remainder = ft_strjoin(remainder, buffer);
+		if (ft_strchr(remainder, '\n'))
+		{
+			line = extract_line(&remainder);
+			free(buffer);
+			return (line);
+		}
 	}
 	free (buffer);
-	if (bytes_read < 0)
-		return (NULL);
-	return (line);
+	if (bytes_read < 0 && remainder)
+		return (extract_line(&remainder));
+	return (NULL);
 }
