@@ -6,7 +6,7 @@
 /*   By: thessena <thessena@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/14 17:24:00 by thessena          #+#    #+#             */
-/*   Updated: 2024/11/20 11:14:40 by thessena         ###   ########.fr       */
+/*   Updated: 2024/11/20 13:49:23 by thessena         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,10 +64,14 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	char	*new_str;
 	size_t	i;
 	size_t	j;
+	int		len1;
+	int		len2;
 
 	if (!s1 || s2)
 		return (NULL);
-	new_str = (char *)malloc((ft_strlen(s1) + ft_strlen(s2) + 1) * sizeof(char));
+	len1 = ft_strlen(s1);
+	len2 = ft_strlen(s2);
+	new_str = (char *)malloc((len1 + len2 + 1) * sizeof(char));
 	if (!new_str)
 		return (NULL);
 	i = 0;

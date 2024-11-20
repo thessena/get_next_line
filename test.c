@@ -6,7 +6,7 @@
 /*   By: thessena <thessena@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 10:59:47 by thessena          #+#    #+#             */
-/*   Updated: 2024/11/20 11:04:11 by thessena         ###   ########.fr       */
+/*   Updated: 2024/11/20 13:37:53 by thessena         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,8 @@ int	main(void)
 		perror("Error openeing file");
 		return (1);
 	}
-	while ((line = get_next_line(fd)) != NULL)
+	line = get_next_line(fd) != NULL;
+	while (line)
 	{
 		printf("%s", line);
 		free(line);
