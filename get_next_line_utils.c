@@ -6,7 +6,7 @@
 /*   By: thessena <thessena@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/14 17:24:00 by thessena          #+#    #+#             */
-/*   Updated: 2024/11/20 15:33:29 by thessena         ###   ########.fr       */
+/*   Updated: 2024/11/20 16:51:12 by thessena         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ size_t	ft_strlen(const char *s)
 	len = 0;
 	if (!s)
 		return (0);
-	while (s && s[len])
+	while (s[len])
 		len++;
 	return (len);
 }
@@ -66,27 +66,21 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	char	*new_str;
 	size_t	i;
 	size_t	j;
-	int		len1;
-	int		len2;
+	int		sizetotal;
 
 	if (!s1 || !s2)
 		return (NULL);
-	if (!s1)
-		return (ft_strdup(s2));
-	if (!s2)
-		return (ft_strdup(s1));
-	len1 = ft_strlen(s1);
-	len2 = ft_strlen(s2);
-	new_str = (char *)malloc((len1 + len2 + 1) * sizeof(char));
+	sizetotal = ft_strlen(s1) + ft_strlen(s2);
+	new_str = malloc(sizeof(char) * (sizetotal + 1));
 	if (!new_str)
 		return (NULL);
 	i = 0;
+	j = 0;
 	while (s1[i])
 	{
 		new_str[i] = s1[i];
 		i++;
 	}
-	j = 0;
 	while (s2[j])
 		new_str[i++] = s2[j++];
 	new_str[i] = '\0';
@@ -97,7 +91,7 @@ void	*ft_memcpy(void *dst, const void *src, size_t n)
 {
 	size_t	i;
 
-	if (!dst && !src)
+	if (!dst || !src)
 		return (NULL);
 	i = 0;
 	while (i < n)
