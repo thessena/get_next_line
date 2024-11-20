@@ -6,7 +6,7 @@
 /*   By: thessena <thessena@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/14 17:24:00 by thessena          #+#    #+#             */
-/*   Updated: 2024/11/20 10:11:14 by thessena         ###   ########.fr       */
+/*   Updated: 2024/11/20 10:14:20 by thessena         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,5 +37,29 @@ char	*ft_strchr(const char *s, int c)
 	return (NULL);
 }
 
-char	*ft_strjoin(char const *s1, char const *s2);
-char	*ft_strdup(const char *s1);
+char	*ft_strjoin(char const *s1, char const *s2)
+{
+	
+}
+
+char	*ft_strdup(const char *s1)
+{
+	char	*dup;
+	size_t	len;
+	size_t	i;
+	
+	if (!s1)
+		return (NULL);
+	len = ft_strlen(s1);
+	dup = (char *)malloc((len + 1) * sizeof(char));
+	if (!dup)
+		return (NULL);
+	i = 0;
+	while (i < len)
+	{
+		dup[i] = s[i]
+		i++;
+	}
+	dup[i] = '\0';
+	return (dup);
+}
