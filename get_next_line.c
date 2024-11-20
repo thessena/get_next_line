@@ -6,7 +6,7 @@
 /*   By: thessena <thessena@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/14 17:25:59 by thessena          #+#    #+#             */
-/*   Updated: 2024/11/20 09:57:09 by thessena         ###   ########.fr       */
+/*   Updated: 2024/11/20 10:00:59 by thessena         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,12 @@ char	*get_next_line(int fd)
 	if (!buffer)
 		return (NULL);
 
+	while ((bytes_read = read(fd, buffer, BUFFER_SIZE)) > 0)
+	{
+		buffer[bytes_read] = '\0';
+	}
 	free (buffer);
+	if (bytes_read < 0)
+		return (NULL);
 	return (line);
 }
