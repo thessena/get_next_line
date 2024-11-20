@@ -6,12 +6,13 @@
 /*   By: thessena <thessena@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/14 17:22:51 by thessena          #+#    #+#             */
-/*   Updated: 2024/11/20 13:40:58 by thessena         ###   ########.fr       */
+/*   Updated: 2024/11/20 14:39:58 by thessena         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef GET_NEXT_LINE_H
 # define GET_NEXT_LINE_H
+
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 42
 # endif

@@ -6,7 +6,7 @@
 /*   By: thessena <thessena@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/14 17:25:59 by thessena          #+#    #+#             */
-/*   Updated: 2024/11/20 13:46:34 by thessena         ###   ########.fr       */
+/*   Updated: 2024/11/20 14:43:32 by thessena         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@ char	*extract_line(char **remainder)
 	size_t	line_len;
 	size_t	extra_char;
 
+	if (!remainder || !*remainder)
+		return (NULL);
 	line_len = 0;
 	while ((*remainder)[line_len] && (*remainder)[line_len] != '\n')
 		line_len++;
@@ -26,8 +28,8 @@ char	*extract_line(char **remainder)
 	line = (char *)malloc((line_len + 1 + extra_char) * sizeof(char));
 	if (!line)
 		return (NULL);
-	ft_memcpy(line, *remainder, line_len + ((*remainder)[line_len] == '\n'));
-	line[line_len + ((*remainder)[line_len] == '\n')] = '\0';
+	ft_memcpy(line, *remainder, line_len + extra_char);
+	line[line_len + extra_char] = '\0';
 	new_remainder = ft_strdup(*remainder + line_len + extra_char);
 	free(*remainder);
 	*remainder = new_remainder;
@@ -46,24 +48,32 @@ char	*get_next_line(int fd)
 	buffer = (char *)malloc((BUFFER_SIZE + 1) * sizeof(char));
 	if (!buffer)
 		return (NULL);
-	line = 0;
 	if (remainder && ft_strchr(remainder, '\n'))
-	{
-		return (line);
-	}
-	bytes_read = read(fd, buffer, BUFFER_SIZE);
+		return (extract_line(&remainder));
+	line = 0;
+	bytes_read = 1;
 	while (bytes_read > 0)
 	{
+		bytes_read = read(fd, buffer, BUFFER_SIZE);
+		if (bytes_read < 0)
+		{
+			free(buffer);
+			return (NULL);
+		}
 		buffer[bytes_read] = '\0';
 		remainder = ft_strjoin(remainder, buffer);
 		if (ft_strchr(remainder, '\n'))
 		{
 			free(buffer);
-			return (line);
+			return (extract_line(&remainder));
 		}
 	}
 	free (buffer);
-	if (bytes_read == 0 && remainder)
+	if (bytes_read < 0)
 		return (NULL);
-	return (line);
+	if (remainder && *remainder != '\0')
+		return (extract_line(&remainder));
+	free(remainder);
+	remainder = NULL;
+	return (NULL);
 }
