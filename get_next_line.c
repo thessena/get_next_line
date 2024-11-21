@@ -6,7 +6,7 @@
 /*   By: thessena <thessena@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/14 17:25:59 by thessena          #+#    #+#             */
-/*   Updated: 2024/11/21 09:51:08 by thessena         ###   ########.fr       */
+/*   Updated: 2024/11/21 10:02:33 by thessena         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,11 +52,16 @@ int	read_buffer(int fd, char **remainder, char *buffer)
 		*remainder = NULL;
 		return (-1);
 	}
-	if (bytes_read > 0)
-		buffer[bytes_read] = '\0';
+	buffer[bytes_read] = '\0';
 	if (!*remainder)
 		*remainder = ft_strdup("");
 	temp = ft_strjoin(*remainder, buffer);
+	if (!temp)
+	{
+		free(*remainder);
+		*remainder = NULL;
+		return (-1);
+	}
 	free(*remainder);
 	*remainder = temp;
 	return (bytes_read);
@@ -70,8 +75,13 @@ char	*process_buffer(int fd, char **remainder, char *buffer)
 	bytes_read = read_buffer(fd, remainder, buffer);
 	if (bytes_read == -1)
 		return (NULL);
-	if (bytes_read == 0 && !remainder)
+	if (bytes_read == 0 && (!remainder || **remainder == '\0'))
 		return (NULL);
+	if (bytes_read == 0 && *remainder)
+	{
+		line = extract_line(remainder);
+		return (line);
+	}
 	if (ft_strchr(*remainder, '\n'))
 	{
 		line = extract_line(remainder);
@@ -95,9 +105,11 @@ char	*get_next_line(int fd)
 	while (!line)
 	{
 		line = process_buffer(fd, &remainder, buffer);
-		if (!line && (!remainder || !*remainder))
+		if (!line && (!remainder || *remainder == '\0'))
 		{
 			free(buffer);
+			free(remainder);
+			remainder = NULL;
 			return (NULL);
 		}
 	}
