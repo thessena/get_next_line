@@ -6,7 +6,7 @@
 /*   By: thessena <thessena@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/14 17:25:59 by thessena          #+#    #+#             */
-/*   Updated: 2024/11/21 10:02:33 by thessena         ###   ########.fr       */
+/*   Updated: 2024/11/21 11:38:32 by thessena         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ char	*extract_line(char **remainder)
 	size_t	line_len;
 	size_t	extra_char;
 
-	if (!remainder || !*remainder || **remainder == '\0')
+	if (!*remainder || **remainder == '\0')
 	{
 		free(*remainder);
 		*remainder = NULL;
@@ -35,6 +35,13 @@ char	*extract_line(char **remainder)
 	ft_memcpy(line, *remainder, line_len + extra_char);
 	line[line_len + extra_char] = '\0';
 	new_remainder = ft_strdup(*remainder + line_len + extra_char);
+	if (!new_remainder)
+	{
+		free(line);
+		free(*remainder);
+		*remainder = NULL;
+		return (NULL);
+	}
 	free(*remainder);
 	*remainder = new_remainder;
 	return (line);
@@ -54,7 +61,15 @@ int	read_buffer(int fd, char **remainder, char *buffer)
 	}
 	buffer[bytes_read] = '\0';
 	if (!*remainder)
+	{
 		*remainder = ft_strdup("");
+		if (!*remainder)
+		{
+			free(*remainder);
+			*remainder = NULL;
+			return (-1);
+		}
+	}
 	temp = ft_strjoin(*remainder, buffer);
 	if (!temp)
 	{
@@ -100,7 +115,11 @@ char	*get_next_line(int fd)
 		return (NULL);
 	buffer = (char *)malloc((BUFFER_SIZE + 1) * sizeof(char));
 	if (!buffer)
+	{
+		free(remainder);
+		remainder = NULL;
 		return (NULL);
+	}
 	line = NULL;
 	while (!line)
 	{
