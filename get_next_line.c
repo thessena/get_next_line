@@ -6,7 +6,7 @@
 /*   By: thessena <thessena@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/14 17:25:59 by thessena          #+#    #+#             */
-/*   Updated: 2024/11/20 16:23:05 by thessena         ###   ########.fr       */
+/*   Updated: 2024/11/21 09:51:08 by thessena         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,39 +62,45 @@ int	read_buffer(int fd, char **remainder, char *buffer)
 	return (bytes_read);
 }
 
+char	*process_buffer(int fd, char **remainder, char *buffer)
+{
+	int		bytes_read;
+	char	*line;
+
+	bytes_read = read_buffer(fd, remainder, buffer);
+	if (bytes_read == -1)
+		return (NULL);
+	if (bytes_read == 0 && !remainder)
+		return (NULL);
+	if (ft_strchr(*remainder, '\n'))
+	{
+		line = extract_line(remainder);
+		return (line);
+	}
+	return (NULL);
+}
+
 char	*get_next_line(int fd)
 {
 	static char	*remainder;
 	char		*buffer;
 	char		*line;
-	int			bytes_read;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
 	buffer = (char *)malloc((BUFFER_SIZE + 1) * sizeof(char));
 	if (!buffer)
 		return (NULL);
-	bytes_read = 1;
-	while (bytes_read > 0)
+	line = NULL;
+	while (!line)
 	{
-		bytes_read = read_buffer(fd, &remainder, buffer);
-		if (bytes_read == -1)
+		line = process_buffer(fd, &remainder, buffer);
+		if (!line && (!remainder || !*remainder))
 		{
 			free(buffer);
 			return (NULL);
 		}
-		if (ft_strchr(remainder, '\n'))
-		{
-			line = extract_line(&remainder);
-			free(buffer);
-			return (line);
-		}
 	}
-	free (buffer);
-	if (bytes_read == 0 && remainder)
-	{
-		line = extract_line(&remainder);
-		return (line);
-	}
-	return (NULL);
+	free(buffer);
+	return (line);
 }
