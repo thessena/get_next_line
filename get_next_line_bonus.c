@@ -6,7 +6,7 @@
 /*   By: thessena <thessena@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 10:25:13 by thessena          #+#    #+#             */
-/*   Updated: 2024/11/28 10:38:26 by thessena         ###   ########.fr       */
+/*   Updated: 2024/11/28 11:00:36 by thessena         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,24 +81,24 @@ char	*process_buffer(int fd, char **remainder, char *buffer)
 
 char	*get_next_line(int fd)
 {
-	static char	*remainder;
+	static char	*remainder[OPEN_MAX];
 	char		*buffer;
 	char		*line;
 
-	if (fd < 0 || BUFFER_SIZE <= 0)
+	if (fd < 0 || fd >= OPEN_MAX || BUFFER_SIZE <= 0)
 		return (NULL);
 	buffer = malloc(BUFFER_SIZE + 1);
 	if (!buffer)
-		return (free(remainder), remainder = NULL, NULL);
+		return (free(remainder[fd]), remainder[fd] = NULL, NULL);
 	line = NULL;
 	while (!line)
 	{
-		line = process_buffer(fd, &remainder, buffer);
-		if (!line && (!remainder || *remainder == '\0'))
+		line = process_buffer(fd, &remainder[fd], buffer);
+		if (!line && (!remainder[fd] || *remainder[fd] == '\0'))
 		{
 			free(buffer);
-			free(remainder);
-			remainder = NULL;
+			free(remainder[fd]);
+			remainder[fd] = NULL;
 			return (NULL);
 		}
 	}
