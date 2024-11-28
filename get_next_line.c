@@ -6,7 +6,7 @@
 /*   By: thessena <thessena@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/14 17:25:59 by thessena          #+#    #+#             */
-/*   Updated: 2024/11/21 11:58:28 by thessena         ###   ########.fr       */
+/*   Updated: 2024/11/21 12:21:37 by thessena         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,8 @@ char	*extract_line(char **remainder)
 		return (NULL);
 	ft_memcpy(line, *remainder, line_len + extra_char);
 	line[line_len + extra_char] = '\0';
+	if (line_len + extra_char >= ft_strlen(*remainder))
+		return (free(*remainder), *remainder = NULL, line);
 	new_remainder = ft_strdup(*remainder + line_len + extra_char);
 	if (!new_remainder)
 		return (free(line), free(*remainder), *remainder = NULL, NULL);
@@ -48,15 +50,9 @@ int	read_buffer(int fd, char **remainder, char *buffer)
 		return (free(*remainder), *remainder = NULL, bytes_read);
 	buffer[bytes_read] = '\0';
 	if (!*remainder)
-	{
 		*remainder = ft_strdup("");
-		if (!*remainder)
-		{
-			free(*remainder);
-			*remainder = NULL;
-			return (-1);
-		}
-	}
+	if (!*remainder)
+		return (-1);
 	temp = ft_strjoin(*remainder, buffer);
 	if (!temp)
 		return (free(*remainder), *remainder = NULL, -1);
