@@ -6,7 +6,7 @@
 /*   By: thessena <thessena@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/14 17:22:51 by thessena          #+#    #+#             */
-/*   Updated: 2024/11/28 11:23:12 by thessena         ###   ########.fr       */
+/*   Updated: 2024/11/28 13:37:07 by thessena         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,9 @@
 # include <unistd.h>
 # include <stdlib.h>
 
+char	*extract_line(char **remainder);
+int		read_buffer(int fd, char **remainder, char *buffer);
+char	*process_buffer(int fd, char **remainder, char *buffer);
 char	*get_next_line(int fd);
 size_t	ft_strlen(const char *s);
 char	*ft_strchr(const char *s, int c);
