@@ -6,7 +6,7 @@
 /*   By: thessena <thessena@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/14 17:25:59 by thessena          #+#    #+#             */
-/*   Updated: 2024/11/21 12:21:37 by thessena         ###   ########.fr       */
+/*   Updated: 2024/11/28 13:13:02 by thessena         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,6 @@ char	*extract_line(char **remainder)
 	size_t	line_len;
 	size_t	extra_char;
 
-	if (!*remainder || **remainder == '\0')
-		return (free(*remainder), *remainder = NULL, NULL);
 	line_len = 0;
 	while ((*remainder)[line_len] && (*remainder)[line_len] != '\n')
 		line_len++;
@@ -30,11 +28,7 @@ char	*extract_line(char **remainder)
 		return (NULL);
 	ft_memcpy(line, *remainder, line_len + extra_char);
 	line[line_len + extra_char] = '\0';
-	if (line_len + extra_char >= ft_strlen(*remainder))
-		return (free(*remainder), *remainder = NULL, line);
 	new_remainder = ft_strdup(*remainder + line_len + extra_char);
-	if (!new_remainder)
-		return (free(line), free(*remainder), *remainder = NULL, NULL);
 	free(*remainder);
 	*remainder = new_remainder;
 	return (line);
@@ -67,9 +61,7 @@ char	*process_buffer(int fd, char **remainder, char *buffer)
 	char	*line;
 
 	bytes_read = read_buffer(fd, remainder, buffer);
-	if (bytes_read == -1)
-		return (NULL);
-	if (bytes_read == 0 && (!remainder || **remainder == '\0'))
+	if (bytes_read == 0 && (!*remainder || **remainder == '\0'))
 		return (NULL);
 	if (bytes_read == 0 || ft_strchr(*remainder, '\n'))
 	{
